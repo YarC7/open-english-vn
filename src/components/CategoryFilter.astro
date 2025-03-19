@@ -1,0 +1,48 @@
+---
+interface Props {
+  categories: string[];
+}
+
+const { categories } = Astro.props;
+---
+
+<div class="flex flex-wrap gap-2 justify-center mb-8">
+  {categories.map((category) => (
+    <button
+      class="px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors category-filter"
+      data-category={category.toLowerCase()}
+    >
+      {category}
+    </button>
+  ))}
+</div>
+
+<script>
+  const categoryButtons = document.querySelectorAll(".category-filter");
+  const resourceCards = document.querySelectorAll(".resource-card");
+
+  categoryButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const category = button.getAttribute("data-category")?.toLowerCase() || "";
+
+      // Toggle active state
+      button.classList.toggle("bg-blue-100");
+      button.classList.toggle("dark:bg-blue-900");
+      button.classList.toggle("text-blue-700");
+      button.classList.toggle("dark:text-blue-300");
+      button.classList.toggle("bg-gray-100");
+      button.classList.toggle("dark:bg-gray-800");
+      button.classList.toggle("text-gray-700");
+      button.classList.toggle("dark:text-gray-300");
+
+      // Filter resources
+      resourceCards.forEach((card) => {
+        const cardCategories = Array.from(card.querySelectorAll(".category-tag")).map(
+          (tag) => tag.textContent?.toLowerCase() || ""
+        );
+        const isVisible = cardCategories.includes(category);
+        card.classList.toggle("hidden", !isVisible);
+      });
+    });
+  });
+</script> 
